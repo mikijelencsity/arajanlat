@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weboldal Csomagok – Havi Díj</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #06090f;
+    --bg2: #0b0f1a;
+    --teal: #00e5c4;
+    --teal2: #00c4a8;
+    --teal-dim: rgba(0,229,196,0.1);
+    --orange: #ff7043;
+    --orange-dim: rgba(255,112,67,0.1);
+    --silver: #c0ccd8;
+    --text: #e4eaf5;
+    --muted: #4a5570;
+    --card-bg: rgba(255,255,255,0.03);
+    --card-border: rgba(255,255,255,0.07);
+    --green: #4ade80;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 800px 500px at 0% 0%, rgba(0,229,196,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 600px 400px at 100% 100%, rgba(255,112,67,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 400px 300px at 60% 40%, rgba(0,180,255,0.04) 0%, transparent 60%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .wrapper { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 60px 24px 80px; }
+
+  /* Header */
+  .header { text-align: center; margin-bottom: 60px; }
+  .eyebrow {
+    display: inline-block;
+    font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--teal);
+    background: var(--teal-dim);
+    border: 1px solid rgba(0,229,196,0.25);
+    padding: 6px 18px; border-radius: 40px;
+    margin-bottom: 20px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(44px, 8vw, 84px);
+    letter-spacing: 2px; line-height: 0.95;
+    color: #fff;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+  .title span { color: var(--teal); }
+  .subtitle {
+    margin-top: 16px;
+    font-size: 15px; font-weight: 300; color: var(--silver); opacity: 0.65;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+
+  /* Dial / radial comparison */
+  .radial-section {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; margin-bottom: 32px;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+  @media (max-width: 600px) { .radial-section { grid-template-columns: 1fr; } }
+
+  .radial-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 40px 32px;
+    text-align: center;
+    position: relative; overflow: hidden;
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .radial-card:hover { transform: translateY(-8px); }
+  .radial-card.comfort {
+    border-color: rgba(0,229,196,0.3);
+    background: rgba(0,229,196,0.03);
+  }
+  .radial-card.comfort:hover { box-shadow: 0 24px 64px rgba(0,229,196,0.18); }
+  .radial-card.comfort::before {
+    content: ''; position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
+    width: 200px; height: 120px;
+    background: radial-gradient(ellipse, rgba(0,229,196,0.2), transparent 70%);
+    pointer-events: none;
+  }
+  .radial-card.premium {
+    border-color: rgba(255,112,67,0.35);
+    background: rgba(255,112,67,0.03);
+  }
+  .radial-card.premium:hover { box-shadow: 0 24px 64px rgba(255,112,67,0.2); }
+  .radial-card.premium::before {
+    content: ''; position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
+    width: 200px; height: 120px;
+    background: radial-gradient(ellipse, rgba(255,112,67,0.22), transparent 70%);
+    pointer-events: none;
+  }
+
+  .rc-badge {
+    display: inline-block;
+    font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 20px; margin-bottom: 20px;
+  }
+  .rc-badge.comfort { background: rgba(0,229,196,0.15); color: var(--teal); border: 1px solid rgba(0,229,196,0.3); }
+  .rc-badge.premium { background: rgba(255,112,67,0.15); color: var(--orange); border: 1px solid rgba(255,112,67,0.3); }
+
+  /* SVG donut */
+  .donut-wrap { position: relative; width: 140px; height: 140px; margin: 0 auto 24px; }
+  .donut-wrap svg { transform: rotate(-90deg); }
+  .donut-bg { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 10; }
+  .donut-fill {
+    fill: none; stroke-width: 10; stroke-linecap: round;
+    stroke-dasharray: 314; stroke-dashoffset: 314;
+    transition: stroke-dashoffset 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .donut-fill.comfort { stroke: var(--teal); filter: drop-shadow(0 0 8px rgba(0,229,196,0.5)); }
+  .donut-fill.premium { stroke: var(--orange); filter: drop-shadow(0 0 8px rgba(255,112,67,0.5)); }
+  .donut-center {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .donut-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; letter-spacing: 0.5px; display: block; line-height: 1;
+  }
+  .donut-price.comfort { color: var(--teal); }
+  .donut-price.premium { color: var(--orange); }
+  .donut-sub { font-size: 9px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+
+  .rc-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px; letter-spacing: 1px; margin-bottom: 6px; color: #fff;
+  }
+  .rc-tagline {
+    font-size: 12px; font-weight: 300; color: var(--silver); opacity: 0.6;
+    margin-bottom: 24px; line-height: 1.5;
+  }
+  .rc-divider { height: 1px; background: var(--card-border); margin-bottom: 20px; }
+  .rc-features { list-style: none; text-align: left; display: flex; flex-direction: column; gap: 10px; }
+  .rc-features li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 12.5px; color: var(--silver); line-height: 1.5;
+  }
+  .rc-dot {
+    width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0; margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8px; font-weight: 700;
+  }
+  .rc-dot.comfort { background: rgba(0,229,196,0.18); color: var(--teal); }
+  .rc-dot.premium { background: rgba(255,112,67,0.18); color: var(--orange); }
+
+  /* Highlight feature */
+  .highlight-feat {
+    font-weight: 700 !important;
+    color: #fff !important;
+  }
+
+  /* Savings banner */
+  .savings-banner {
+    background: linear-gradient(135deg, rgba(0,229,196,0.08), rgba(255,112,67,0.08));
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 24px 32px;
+    display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.8s 0.5s ease both;
+  }
+  @media (max-width: 600px) { .savings-banner { flex-direction: column; text-align: center; } }
+  .sb-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .sb-value { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 1px; }
+  .sb-value.t { color: var(--teal); }
+  .sb-value.o { color: var(--orange); }
+  .sb-sep { width: 1px; height: 50px; background: var(--card-border); }
+  @media (max-width: 600px) { .sb-sep { width: 100px; height: 1px; } }
+
+  /* Side-by-side bar */
+  .bar-compare {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 32px 36px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.8s 0.6s ease both;
+  }
+  .bc-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 24px; font-weight: 600; }
+  .bc-rows { display: flex; flex-direction: column; gap: 18px; }
+  .bc-row { display: flex; align-items: center; gap: 16px; }
+  .bc-name { width: 130px; font-size: 13px; font-weight: 600; color: var(--silver); flex-shrink: 0; }
+  .bc-track { flex: 1; height: 40px; background: rgba(255,255,255,0.04); border-radius: 8px; overflow: hidden; }
+  .bc-fill {
+    height: 100%; border-radius: 8px;
+    display: flex; align-items: center; padding-left: 14px;
+    font-size: 12px; font-weight: 700; color: rgba(0,0,0,0.8);
+    width: 0; transition: width 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .bc-fill.comfort { background: linear-gradient(90deg, #00c4a8, #00e5c4); color: #003028; }
+  .bc-fill.premium { background: linear-gradient(90deg, #d64a20, #ff7043); color: #3a1000; }
+  .bc-price { font-size: 13px; font-weight: 700; width: 130px; text-align: right; flex-shrink: 0; }
+  .bc-price.comfort { color: var(--teal); }
+  .bc-price.premium { color: var(--orange); }
+
+  /* Hourly rate callout */
+  .hourly-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.8s 0.7s ease both;
+  }
+  @media (max-width: 500px) { .hourly-row { grid-template-columns: 1fr; } }
+  .hourly-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 24px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .hourly-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+  }
+  .hourly-icon.comfort { background: rgba(0,229,196,0.12); }
+  .hourly-icon.premium { background: rgba(255,112,67,0.12); }
+  .hourly-info { flex: 1; }
+  .hourly-pkg { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .hourly-rate { font-family: 'Bebas Neue', sans-serif; font-size: 28px; }
+  .hourly-rate.comfort { color: var(--teal); }
+  .hourly-rate.premium { color: var(--orange); }
+  .hourly-desc { font-size: 11px; color: var(--muted); }
+
+  /* Footer */
+  .footer {
+    border-top: 1px solid var(--card-border);
+    padding-top: 28px; margin-top: 16px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 12px; color: var(--muted);
+    animation: fadeUp 0.8s 0.8s ease both;
+  }
+  .footer strong { color: var(--teal); }
+  @media (max-width: 500px) { .footer { flex-direction: column; gap: 10px; text-align: center; } }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="eyebrow">NEZOR Webfejlesztés</div>
+    <div class="title">Havi<br><span>Karbantartás</span></div>
+    <div class="subtitle">Folyamatos gondozás, fejlesztés és biztonság — havi előfizetéses modell</div>
+  </div>
+
+  <!-- Bar compare -->
+  <div class="bar-compare">
+    <div class="bc-label">Havi díj összehasonlítása (Ft)</div>
+    <div class="bc-rows">
+      <div class="bc-row">
+        <div class="bc-name">Comfort</div>
+        <div class="bc-track">
+          <div class="bc-fill comfort" data-w="58.3" id="c1">17 500 Ft</div>
+        </div>
+        <div class="bc-price comfort">17 500 Ft / hó</div>
+      </div>
+      <div class="bc-row">
+        <div class="bc-name">Premium Care</div>
+        <div class="bc-track">
+          <div class="bc-fill premium" data-w="100" id="c2">30 000 Ft</div>
+        </div>
+        <div class="bc-price premium">30 000 Ft / hó</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cards -->
+  <div class="radial-section">
+
+    <!-- Comfort -->
+    <div class="radial-card comfort">
+      <div class="rc-badge comfort">01</div>
+      <div class="donut-wrap">
+        <svg viewBox="0 0 110 110" width="140" height="140">
+          <circle class="donut-bg" cx="55" cy="55" r="50"/>
+          <circle class="donut-fill comfort" id="d1" cx="55" cy="55" r="50" data-pct="58.3"/>
+        </svg>
+        <div class="donut-center">
+          <span class="donut-price comfort">17 500</span>
+          <span class="donut-sub">Ft / hó</span>
+        </div>
+      </div>
+      <div class="rc-name">Comfort Csomag</div>
+      <div class="rc-tagline">Alapos karbantartás és technikai biztonság minden hónapban.</div>
+      <div class="rc-divider"></div>
+      <ul class="rc-features">
+        <li><span class="rc-dot comfort">✓</span>Weboldal elkészítése (fejlesztés)</li>
+        <li><span class="rc-dot comfort">✓</span>Technikai karbantartás & frissítések</li>
+        <li><span class="rc-dot comfort">✓</span>Biztonsági mentések</li>
+        <li><span class="rc-dot comfort highlight-feat">✓</span><span class="highlight-feat">Havi 2 ingyenes fejlesztési óra</span></li>
+        <li><span class="rc-dot comfort">✓</span>Óradíj: 10 000 Ft / óra</li>
+        <li><span class="rc-dot comfort">✓</span>Hibajavítás 1–2 munkanapon belül</li>
+        <li><span class="rc-dot comfort">✓</span>Rendszeres állapotjelentés</li>
+      </ul>
+    </div>
+
+    <!-- Premium Care -->
+    <div class="radial-card premium">
+      <div class="rc-badge premium">02</div>
+      <div class="donut-wrap">
+        <svg viewBox="0 0 110 110" width="140" height="140">
+          <circle class="donut-bg" cx="55" cy="55" r="50"/>
+          <circle class="donut-fill premium" id="d2" cx="55" cy="55" r="50" data-pct="100"/>
+        </svg>
+        <div class="donut-center">
+          <span class="donut-price premium">30 000</span>
+          <span class="donut-sub">Ft / hó</span>
+        </div>
+      </div>
+      <div class="rc-name">Premium Care</div>
+      <div class="rc-tagline">Maximális lefedettség, azonnali beavatkozás, proaktív fejlesztés.</div>
+      <div class="rc-divider"></div>
+      <ul class="rc-features">
+        <li><span class="rc-dot premium">✓</span>Minden a Comfort csomagból</li>
+        <li><span class="rc-dot premium highlight-feat">✓</span><span class="highlight-feat">0–24 órás készenlét</span></li>
+        <li><span class="rc-dot premium">✓</span>Hétvégi & ünnepnapi is</li>
+        <li><span class="rc-dot premium">✓</span>Prioritásos, nagyon gyors hibajavítás</li>
+        <li><span class="rc-dot premium highlight-feat">✓</span><span class="highlight-feat">Havi 8 ingyenes fejlesztési óra</span></li>
+        <li><span class="rc-dot premium">✓</span>Kedvezményes óradíj: 8 000 Ft / óra</li>
+        <li><span class="rc-dot premium">✓</span>Proaktív SEO & biztonsági elemzés</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Savings banner -->
+  <div class="savings-banner">
+    <div>
+      <div class="sb-label">Comfort – Fejlesztési óra</div>
+      <div class="sb-value t">10 000 Ft</div>
+      <div style="font-size:11px;color:var(--muted);">normál óradíj</div>
+    </div>
+    <div class="sb-sep"></div>
+    <div>
+      <div class="sb-label">Premium Care – Fejlesztési óra</div>
+      <div class="sb-value o">8 000 Ft</div>
+      <div style="font-size:11px;color:var(--muted);">kedvezményes óradíj</div>
+    </div>
+    <div class="sb-sep"></div>
+    <div>
+      <div class="sb-label">Ingyenes óra különbség</div>
+      <div class="sb-value" style="color:#fff;">+6 óra / hó</div>
+      <div style="font-size:11px;color:var(--muted);">2 → 8 ingyenes óra</div>
+    </div>
+  </div>
+
+  <!-- Hourly callout -->
+  <div class="hourly-row">
+    <div class="hourly-card">
+      <div class="hourly-icon comfort">⏱️</div>
+      <div class="hourly-info">
+        <div class="hourly-pkg">Comfort – Havi kerete</div>
+        <div class="hourly-rate comfort">2 óra</div>
+        <div class="hourly-desc">ingyenes fejlesztés / hó</div>
+      </div>
+    </div>
+    <div class="hourly-card">
+      <div class="hourly-icon premium">⚡</div>
+      <div class="hourly-info">
+        <div class="hourly-pkg">Premium Care – Havi kerete</div>
+        <div class="hourly-rate premium">8 óra</div>
+        <div class="hourly-desc">ingyenes fejlesztés / hó</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div>NEZOR Webfejlesztés &mdash; Müller Dániel</div>
+    <div><strong>+36 30 203 6721</strong> &nbsp;·&nbsp; mullerdanielev@gmail.com</div>
+  </div>
+
+</div>
+
+<script>
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      // Bars
+      document.querySelectorAll('.bc-fill').forEach(el => {
+        el.style.width = parseFloat(el.dataset.w) + '%';
+      });
+
+      // Donuts
+      document.querySelectorAll('.donut-fill').forEach(el => {
+        const pct = parseFloat(el.dataset.pct) / 100;
+        const circumference = 314;
+        el.style.strokeDashoffset = circumference * (1 - pct);
+      });
+    }, 600);
+  });
+</script>
+</body>
+</html>
